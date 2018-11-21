@@ -12,5 +12,8 @@
   "dependencies": {
     "d3-geo": "^1.11.1",
     "ramda": "^0.26.0"
+  },
+  "devDependencies": {
+    "d3-geo-projection": "^2.4.1"
   }
 }
