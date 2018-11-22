@@ -4,7 +4,6 @@
 json/1710ebf6cf614b5fa97c0a269cece375_0.geojson:
 	@mkdir -p $(dir $@)
 	@curl \
-		-sS \
 		"http://maps-massgis.opendata.arcgis.com/datasets/1710ebf6cf614b5fa97c0a269cece375_0.geojson" \
 		-o $@.download
 	@mv $@.download $@
@@ -31,7 +30,12 @@ topojson/ma-quantized-topo.json: topojson/ma-simple-topo.json
 		< $< \
 		> $@
 
-all: topojson/ma-quantized-topo.json
+topojson/ma-quantized-geo.json: topojson/ma-quantized-topo.json
+	@topo2geo \
+		ma-projected=$@ \
+		< $<
+
+all: topojson/ma-quantized-geo.json
 
 clean: 
 	@rm -rf json
