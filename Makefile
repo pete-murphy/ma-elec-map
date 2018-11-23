@@ -15,12 +15,7 @@ topojson-a/ma-topo.json: json/ma-utils.geojson
 		$< \
 		> $@
 
-topojson-a/ma-simple-topo.json: topojson-a/ma-topo.json
-	@toposimplify -s 1e5 -f \
-		< $< \
-		> $@
-
-topojson-a/ma-quantized-topo.json: topojson-a/ma-simple-topo.json
+topojson-a/ma-quantized-topo.json: topojson-a/ma-topo.json
 	@topoquantize 1e5 \
 		< $< \
 		> $@
