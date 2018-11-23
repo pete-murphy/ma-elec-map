@@ -16,7 +16,7 @@ topojson/ma-topo.json: json/ma-utils.geojson
 		> $@
 
 topojson/ma-simple-topo.json: topojson/ma-topo.json
-	@toposimplify -p 1 -f \
+	@toposimplify -s 1 -f \
 		< $< \
 		> $@
 
@@ -33,5 +33,4 @@ topojson/ma-quantized-geo.json: topojson/ma-quantized-topo.json
 all: topojson/ma-quantized-geo.json
 
 clean: 
-	@rm -rf json
 	@rm -rf topojson
