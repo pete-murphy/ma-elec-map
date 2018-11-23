@@ -9,28 +9,28 @@ json/ma-utils.geojson:
 	@mv $@.download $@
 
 
-topojson/ma-topo.json: json/ma-utils.geojson
+topojson-a/ma-topo.json: json/ma-utils.geojson
 	@mkdir -p $(dir $@)
 	@geo2topo \
 		$< \
 		> $@
 
-topojson/ma-simple-topo.json: topojson/ma-topo.json
+topojson-a/ma-simple-topo.json: topojson-a/ma-topo.json
 	@toposimplify -s 1e5 -f \
 		< $< \
 		> $@
 
-topojson/ma-quantized-topo.json: topojson/ma-simple-topo.json
+topojson-a/ma-quantized-topo.json: topojson-a/ma-simple-topo.json
 	@topoquantize 1e5 \
 		< $< \
 		> $@
 
-topojson/ma-quantized-geo.json: topojson/ma-quantized-topo.json
+topojson-a/ma-quantized-geo.json: topojson-a/ma-quantized-topo.json
 	@topo2geo \
 		ma-utils=$@ \
 		< $<
 
-all: topojson/ma-quantized-geo.json
+all: topojson-a/ma-quantized-geo.json
 
 clean: 
-	@rm -rf topojson
+	@rm -rf topojson-a
