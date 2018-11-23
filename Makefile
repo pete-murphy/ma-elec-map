@@ -16,7 +16,7 @@ topojson-a/ma-topo.json: json/ma-utils.geojson
 		> $@
 
 topojson-a/ma-simple-topo.json: topojson-a/ma-topo.json
-	@toposimplify -s 1e-7 -f \
+	@toposimplify -s 1e-	8 -f \
 		< $< \
 		> $@
 
