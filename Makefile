@@ -1,6 +1,11 @@
 .PHONY: all clean test
 
 # Download geojson
+# NOTE: Something is wrong with this GeoJSON
+#   --  was only able to fix after dropping it
+#   --  into mapshaper :(. Maybe downloading
+#   --  Shapefiles and converting with ogr2ogr
+#   --  would be better.
 json/1710ebf6cf614b5fa97c0a269cece375_0.geojson:
 	@mkdir -p $(dir $@)
 	@curl \

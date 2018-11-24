@@ -1,4 +1,4 @@
-import {
+const {
   compose,
   equals,
   filter,
@@ -8,10 +8,11 @@ import {
   lensPath,
   map,
   prop,
+  uniq,
   view
-} from "ramda"
-import { readFileSync } from "fs"
-import { geoConicConformal } from "d3"
+} = require("ramda")
+const { readFileSync, writeFileSync } = require("fs")
+const { geoConicConformal } = require("d3")
 
 const projection = d =>
   geoConicConformal()
@@ -22,21 +23,79 @@ const projection = d =>
 const data = compose(
   JSON.parse,
   readFileSync
-)("./data/util.geojson")
+)("./topojson-a/ma-quantized-topo.json")
 
-data.features[1].properties.ELEC_LABEL //?
+data.objects["ma-utils"].geometries //?
 
-data.features.map(
+// data.features[1].properties.ELEC_LABEL //?
+
+data.objects["ma-utils"].geometries.map(
   ({ properties: { ELEC_LABEL } }) => ELEC_LABEL
 )
 //?
 
-compose(
-  map(prop("ELEC_LABEL")),
-  map(view(lensPath(["properties"]))),
-  prop("features")
-)(data) //?
+// const utils = compose(
+//   map(view(lensPath(["properties"]))),
+//   view(lensPath(["objects", "ma-utils", "geometries"]))
+// )(data) //?
 
-groupBy(view(lensPath(["properties", "ELEC_LABEL"])))(
-  data.features
-) //?
+const rateLUT = {
+  fitchburg: 0.35795,
+  massachusetts: 0.35795,
+  nantucket: 0.391,
+  nstar: 0.391,
+  wmeco: 0.32862
+}
+
+Array.prototype.flatMap = function(f) {
+  return this.reduce((acc, x) => [...acc, ...f(x)], [])
+}
+
+const avg = xs =>
+  xs.reduce((acc, x) => acc + x, 0) / xs.length
+
+console.log(JSON.stringify())
+
+// data.objects["ma-utils"].geometries //?
+
+const newData = {
+  ...data,
+  objects: {
+    ...data.objects,
+    ["ma-utils"]: {
+      ...data.objects["ma-utils"],
+      geometries: {
+        ...data.objects["ma-utils"].geometries.map(
+          geometry => ({
+            ...geometry,
+            properties: {
+              ...geometry.properties,
+              RATE: avg(
+                geometry.properties.ELEC.split(
+                  ", "
+                ).flatMap(util =>
+                  Object.entries(rateLUT)
+                    .map(
+                      ([k, v]) =>
+                        new RegExp(k, "i").test(util)
+                          ? [v]
+                          : []
+                    )
+                    .reduce((acc, x) => acc.concat(x), [])
+                )
+              )
+            }
+          })
+        )
+      }
+    }
+  }
+}
+
+newData.objects["ma-utils"].geometries[1] //?
+
+writeFileSync(
+  "./new-topo.json",
+  JSON.stringify(newData, null, 2),
+  "utf8"
+)
