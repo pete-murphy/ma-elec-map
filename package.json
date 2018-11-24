@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "d3-geo-projection": "^2.4.1",
+    "mapshaper": "^0.4.103",
     "topojson": "^3.0.2"
   }
 }
